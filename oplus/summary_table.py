@@ -26,6 +26,7 @@ class SummaryTable:
         with open(self.path, encoding=self.encoding) as f:
             start_parse = False
             search_end = False
+
             for var in enumerate(f):
                 line_nb = var[0]
                 line_s = var[1]
@@ -55,10 +56,12 @@ class SummaryTable:
                           '----',
                           'Values in table are in hours.'
                           ]]) and line_s[0] != '%s' % self.sep and line_s[0:2] != '\n':
+
                     if search_end:
                         self.report_tables_ref['{r}_{f}'.format(r=report, f=for_)][table_name]['lineend'] = line_nb-1
                         search_end = False
                     table_name = line_s.split('%s' % self.sep)[0].replace('\n', '')
+
                     if table_name not in self.report_tables_ref['{r}_{f}'.format(r=report, f=for_)]['TableListName']:
                         self.report_tables_ref['{r}_{f}'.format(r=report, f=for_)]['TableListName'].append(table_name)
                     self.report_tables_ref['{r}_{f}'.format(r=report, f=for_)][table_name] = {}
@@ -81,6 +84,7 @@ class SummaryTable:
                     continue
                 if 'linestart' not in self.report_tables_ref[report_key][table_key].keys():
                     delete_t.append((report_key, table_key))
+
         # remove table ref
         for (r_key, t_key) in delete_t:
             del self.report_tables_ref[r_key][t_key]
@@ -107,7 +111,7 @@ class SummaryTable:
             nrows=end_line-begin_line-3,
             index_col=1
             )
-        df = df.dropna(axis='columns', how='all')
+        #df = df.dropna(axis='columns', how='all')
         df = df.dropna(axis='rows', how='all')
 
         # delete index name

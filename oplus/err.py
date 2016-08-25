@@ -45,7 +45,6 @@ class ERR:
             for var in enumerate(f):
                 # line_nb = var[0]
                 line_s = var[1].rstrip('\n')
-
                 # GET GENERIC INFORMATION
                 if 'Program Version,EnergyPlus' in line_s:
                     self.info['EnergyPlus Simulation Version'] = line_s.split(',')[2].rstrip('Version ')
@@ -105,6 +104,13 @@ class ERR:
                 elif '**   ~~~   **' in line_s:  # if we are here, we are sure category and index_nb have been defined
                     # information to add to error
                     step_df[category].loc[index_nb] += '\n' + line_s.split('**   ~~~   **')[1]
+
+            # add last one
+            iterables = [simulation_step, step_df.columns]
+            columns = pd.MultiIndex.from_product(iterables)
+            multi_step_df = pd.DataFrame(index=range(0, max_nb), columns=columns)
+            multi_step_df[simulation_step] = step_df
+            self.df = self.df.join(multi_step_df)
 
             self.info = pd.Series(self.info, index=self.info.keys())
 
