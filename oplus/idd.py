@@ -184,8 +184,10 @@ class ObjectDescriptor:
         """
         index = self.get_field_index(index_or_name)
 
-        if index >= len(self._fieldds_l) and (self._extensible_cycle_len != 0):  # extensible object, find modulo
-            index = self._extensible_cycle_len + ((index - self._extensible_cycle_start) % self._extensible_cycle_len)
+        cycle_len, cycle_start = self.extensible
+
+        if index >= len(self._fieldds_l) and (cycle_len != 0):  # extensible object, find modulo
+            index = cycle_len + ((index - cycle_start) % cycle_len)
 
         return self._fieldds_l[index]
 
